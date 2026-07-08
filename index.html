@@ -418,6 +418,39 @@
     line-height:1.1;
   }
 
+  .section-header-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:18px;
+    margin-bottom:36px;
+  }
+  .section-header-row .section-label{ margin-bottom:0; }
+
+  .toggle-dead{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:0.95rem;
+    padding:9px 20px;
+    border:3px solid var(--ink);
+    border-radius:999px;
+    background:#fff;
+    color:var(--ink);
+    box-shadow:4px 4px 0 var(--ink);
+    cursor:pointer;
+    transform:rotate(1.5deg);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .toggle-dead:hover{
+    transform:rotate(0deg) translate(2px,2px);
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .toggle-dead:focus-visible{
+    outline:3px solid var(--purple);
+    outline-offset:3px;
+  }
+  #projects.hide-dead .project.dead{ display:none; }
+
   /* ================= PROJECTS ================= */
   .project{
     position:relative;
@@ -738,7 +771,10 @@
 </section>
 
 <section id="projects">
-  <span class="section-label">the projects</span>
+  <div class="section-header-row">
+    <span class="section-label">the projects</span>
+    <button type="button" class="toggle-dead" id="deadToggle" onclick="toggleDead()">☠️ hide the dead</button>
+  </div>
 
   <svg class="doodle" style="top:-10px; right:2%;" width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="#221A15" stroke-width="2.5">
     <circle cx="30" cy="30" r="20" fill="#FFCC29"/>
@@ -847,8 +883,17 @@
   <div class="strip">made with wacky energy ✂️ &nbsp;•&nbsp; more projects comin' soon</div>
   <p style="margin-top:22px; font-family:'Baloo 2', sans-serif; font-size:0.9rem; color:#5a4f47;">
     thanks for stopping by the workshop &mdash; go build something wacky too.
-  </p>
-</footer>
+  </p></footer>
+
+<script>
+  function toggleDead(){
+    var section = document.getElementById('projects');
+    var btn = document.getElementById('deadToggle');
+    var hidden = section.classList.toggle('hide-dead');
+    btn.textContent = hidden ? '💀 show the dead' : '☠️ hide the dead';
+  }
+</script>
+
 
 </body>
 </html>
