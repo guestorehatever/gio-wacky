@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gio's Wacky Prodjects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFF6E5;
+    --paper-dark:#F5E9CE;
+    --ink:#221A15;
+    --pink:#FF4FA3;
+    --blue:#2FAEEB;
+    --yellow:#FFCC29;
+    --purple:#8B5CF6;
+    --green:#3ECF6E;
+    --orange:#FF7A3D;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Nunito', sans-serif;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(circle, rgba(34,26,21,0.06) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+
+  /* ---------- reusable wobble border ---------- */
+  .wobbly{
+    filter: url(#wobble);
+  }
+
+  .tape{
+    position:absolute;
+    width:90px;
+    height:34px;
+    background:rgba(255, 204, 41, 0.55);
+    border:2px solid var(--ink);
+    box-shadow:0 2px 0 rgba(0,0,0,0.08);
+  }
+  .tape.blue{ background:rgba(47,174,235,0.5); }
+  .tape.pink{ background:rgba(255,79,163,0.45); }
+
+  /* ---------- doodles ---------- */
+  .doodle{
+    position:absolute;
+    opacity:0.9;
+    z-index:1;
+    filter: url(#wobble);
+  }
+
+  /* ================= HERO ================= */
+  header{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 20px 100px;
+    overflow:hidden;
+  }
+
+  .hero-title{
+    font-family:'Permanent Marker', cursive;
+    font-size:clamp(2.6rem, 8vw, 6rem);
+    line-height:1.05;
+    transform:rotate(-3deg);
+    color:var(--ink);
+    text-shadow:4px 4px 0 var(--yellow);
+    margin:0 0 10px;
+    position:relative;
+    z-index:2;
+  }
+
+  .hero-title .accent{ color:var(--pink); text-shadow:4px 4px 0 var(--blue); }
+
+  .hero-sub{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:clamp(1rem, 2.4vw, 1.4rem);
+    max-width:520px;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:10px 26px;
+    transform:rotate(1.5deg);
+    position:relative;
+    z-index:2;
+    box-shadow:5px 5px 0 var(--ink);
+  }
+
+  .scroll-cue{
+    margin-top:56px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    animation:bob 1.6s ease-in-out infinite;
+    z-index:2;
+  }
+
+  @keyframes bob{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(10px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scroll-cue{ animation:none; }
+  }
+
+  /* ================= SECTION WRAPPERS ================= */
+  section{
+    position:relative;
+    max-width:980px;
+    margin:0 auto;
+    padding:60px 24px 100px;
+  }
+
+  .section-label{
+    font-family:'Permanent Marker', cursive;
+    font-size:1.9rem;
+    display:inline-block;
+    background:var(--pink);
+    color:#fff;
+    padding:6px 22px;
+    transform:rotate(-2deg);
+    box-shadow:5px 5px 0 var(--ink);
+    margin-bottom:36px;
+    filter:url(#wobble);
+  }
+
+  /* ================= ABOUT ================= */
+  .about-card{
+    position:relative;
+    background:#fff;
+    border:3px solid var(--ink);
+    border-radius:18px;
+    padding:36px;
+    display:flex;
+    gap:28px;
+    align-items:center;
+    transform:rotate(-1deg);
+    box-shadow:8px 8px 0 var(--ink);
+    filter:url(#wobble);
+  }
+
+  .avatar{
+    flex:0 0 auto;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:conic-gradient(from 200deg, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow), var(--pink));
+    border:3px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Permanent Marker', cursive;
+    font-size:2.6rem;
+    color:#fff;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.35);
+    transform:rotate(3deg);
+  }
+
+  .about-text{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:1.15rem;
+    line-height:1.55;
+  }
+
+  .about-text strong{
+    font-family:'Permanent Marker', cursive;
+    font-weight:400;
+    font-size:1.3rem;
+    color:var(--pink);
+  }
+
+  /* ---------- skill chips ---------- */
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-top:32px;
+    justify-content:center;
+  }
+
+  .chip{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    padding:8px 18px;
+    border:3px solid var(--ink);
+    border-radius:999px;
+    background:#fff;
+    box-shadow:3px 3px 0 var(--ink);
+    filter:url(#wobble);
+  }
+  .chip:nth-child(6n+1){ background:var(--yellow); transform:rotate(-2deg); }
+  .chip:nth-child(6n+2){ background:var(--blue); color:#fff; transform:rotate(2deg); }
+  .chip:nth-child(6n+3){ background:var(--pink); color:#fff; transform:rotate(-1.5deg); }
+  .chip:nth-child(6n+4){ background:var(--green); transform:rotate(1.5deg); }
+  .chip:nth-child(6n+5){ background:var(--purple); color:#fff; transform:rotate(-1deg); }
+  .chip:nth-child(6n+6){ background:var(--orange); transform:rotate(1deg); }
+
+  /* ---------- stat badges ---------- */
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    justify-content:center;
+    margin-top:48px;
+  }
+  .stat{
+    background:#fff;
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:18px 26px;
+    text-align:center;
+    box-shadow:6px 6px 0 var(--ink);
+    filter:url(#wobble);
+    min-width:150px;
+  }
+  .stat:nth-child(odd){ transform:rotate(-2deg); }
+  .stat:nth-child(even){ transform:rotate(2deg); }
+  .stat .num{
+    font-family:'Permanent Marker', cursive;
+    font-size:2.4rem;
+    color:var(--pink);
+    display:block;
+  }
+  .stat .label{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+  }
+
+  /* ---------- sticky notes (hobbies) ---------- */
+  .sticky-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap:22px;
+    margin-top:10px;
+  }
+  .sticky{
+    position:relative;
+    padding:20px 16px 16px;
+    border:3px solid var(--ink);
+    border-radius:6px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.98rem;
+    line-height:1.35;
+    box-shadow:5px 5px 0 var(--ink);
+    filter:url(#wobble);
+    min-height:120px;
+  }
+  .sticky::before{
+    content:'';
+    position:absolute;
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%) rotate(-6deg);
+    width:46px;
+    height:20px;
+    background:rgba(34,26,21,0.65);
+  }
+  .sticky.c1{ background:var(--yellow); transform:rotate(-2deg); }
+  .sticky.c2{ background:#FF9FD1; transform:rotate(1.5deg); }
+  .sticky.c3{ background:#9BE7FF; transform:rotate(-1.2deg); }
+  .sticky.c4{ background:#BFF5D2; transform:rotate(2deg); }
+  .sticky.c5{ background:#D8C4FF; transform:rotate(-1.8deg); }
+  .sticky.c6{ background:#FFC299; transform:rotate(1.2deg); }
+  .sticky span.emoji{ font-size:1.6rem; display:block; margin-bottom:6px; }
+
+  /* ================= PROJECTS ================= */
+  .project{
+    position:relative;
+    background:#fff;
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:32px;
+    margin-bottom:64px;
+    box-shadow:8px 8px 0 var(--ink);
+    filter:url(#wobble);
+    transition:transform 0.25s ease;
+  }
+
+  .project:nth-child(odd){ transform:rotate(-1.4deg); }
+  .project:nth-child(even){ transform:rotate(1.4deg); }
+  .project:hover{ transform:rotate(0deg) translateY(-4px); }
+
+  .project-tag{
+    position:absolute;
+    top:-22px;
+    left:24px;
+    font-family:'Permanent Marker', cursive;
+    font-size:1rem;
+    padding:6px 16px;
+    border:3px solid var(--ink);
+    border-radius:999px;
+    background:var(--yellow);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+
+  .project-tag.two{ background:var(--green); }
+
+  .project h3{
+    font-family:'Permanent Marker', cursive;
+    font-size:2rem;
+    margin:14px 0 4px;
+    color:var(--ink);
+  }
+
+  .project p{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+    line-height:1.6;
+    max-width:560px;
+  }
+
+  .visit-btn{
+    display:inline-block;
+    margin-top:16px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:1.05rem;
+    text-decoration:none;
+    color:#fff;
+    background:var(--pink);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:10px 26px;
+    box-shadow:4px 4px 0 var(--ink);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .visit-btn:hover{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .visit-btn:focus-visible{
+    outline:3px solid var(--purple);
+    outline-offset:3px;
+  }
+  .visit-btn.blue{ background:var(--blue); }
+
+  /* ---- polaroid thumbnail ---- */
+  .project-body{
+    display:flex;
+    gap:26px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+  .project-copy{ flex:1 1 260px; }
+  .polaroid{
+    position:relative;
+    flex:0 0 auto;
+    background:#fff;
+    border:3px solid var(--ink);
+    padding:10px 10px 34px;
+    width:220px;
+    box-shadow:6px 6px 0 var(--ink);
+    transform:rotate(2deg);
+  }
+  .project:nth-child(even) .polaroid{ transform:rotate(-2.5deg); }
+  .polaroid img{
+    display:block;
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    border:2px solid var(--ink);
+    background:var(--paper-dark);
+  }
+  .polaroid .cap{
+    position:absolute;
+    bottom:8px;
+    left:0;
+    right:0;
+    text-align:center;
+    font-family:'Permanent Marker', cursive;
+    font-size:0.95rem;
+    color:var(--ink);
+  }
+  .polaroid .pin{
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--pink);
+    border:2px solid var(--ink);
+  }
+
+  /* ---- mystery / coming soon card ---- */
+  .project.mystery{
+    background:repeating-linear-gradient(135deg, #fff, #fff 14px, var(--paper-dark) 14px, var(--paper-dark) 28px);
+    text-align:center;
+  }
+  .project.mystery h3{ color:var(--purple); }
+  .project.mystery .qmark{
+    font-family:'Permanent Marker', cursive;
+    font-size:3rem;
+    display:block;
+    margin-bottom:6px;
+  }
+
+  /* ================= FOOTER ================= */
+  footer{
+    text-align:center;
+    padding:50px 24px 70px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    position:relative;
+  }
+
+  footer .strip{
+    display:inline-block;
+    background:var(--purple);
+    color:#fff;
+    padding:10px 24px;
+    border:3px solid var(--ink);
+    border-radius:10px;
+    transform:rotate(-2deg);
+    box-shadow:4px 4px 0 var(--ink);
+    filter:url(#wobble);
+  }
+
+  /* ================= responsive ================= */
+  @media (max-width:640px){
+    .about-card{ flex-direction:column; text-align:center; }
+    .doodle{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG filter for hand-drawn wobble + hidden doodle defs -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="wobble">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6"/>
+  </filter>
+</svg>
+
+<header>
+  <!-- tape decorations -->
+  <div class="tape" style="top:8%; left:12%; transform:rotate(-18deg);"></div>
+  <div class="tape blue" style="top:14%; right:10%; transform:rotate(14deg);"></div>
+  <div class="tape pink" style="bottom:16%; left:8%; transform:rotate(9deg);"></div>
+
+  <!-- doodles: floppy disk -->
+  <svg class="doodle" style="top:18%; left:6%;" width="70" height="70" viewBox="0 0 64 64" fill="none" stroke="#221A15" stroke-width="2.5">
+    <rect x="8" y="8" width="48" height="48" rx="3" fill="#2FAEEB"/>
+    <rect x="18" y="8" width="20" height="16" fill="#fff"/>
+    <rect x="14" y="34" width="36" height="20" fill="#fff"/>
+    <rect x="34" y="10" width="4" height="10" fill="#221A15"/>
+  </svg>
+
+  <!-- doodle: VHS tape -->
+  <svg class="doodle" style="bottom:10%; right:8%;" width="90" height="60" viewBox="0 0 100 60" fill="none" stroke="#221A15" stroke-width="2.5">
+    <rect x="4" y="6" width="92" height="48" rx="6" fill="#FF7A3D"/>
+    <circle cx="30" cy="30" r="9" fill="#fff"/>
+    <circle cx="70" cy="30" r="9" fill="#fff"/>
+    <rect x="14" y="42" width="72" height="6" fill="#221A15"/>
+  </svg>
+
+  <!-- doodle: joystick -->
+  <svg class="doodle" style="top:10%; right:18%;" width="60" height="80" viewBox="0 0 60 90" fill="none" stroke="#221A15" stroke-width="2.5">
+    <rect x="14" y="50" width="32" height="30" rx="4" fill="#FFCC29"/>
+    <line x1="30" y1="50" x2="30" y2="18"/>
+    <circle cx="30" cy="14" r="10" fill="#FF4FA3"/>
+  </svg>
+
+  <!-- doodle: needle & thread -->
+  <svg class="doodle" style="bottom:22%; left:20%;" width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#221A15" stroke-width="2.5">
+    <path d="M10 60 C 20 40, 10 20, 30 15" fill="none" stroke="#8B5CF6"/>
+    <line x1="30" y1="15" x2="55" y2="8"/>
+    <circle cx="52" cy="9" r="3" fill="#221A15"/>
+  </svg>
+
+  <h1 class="hero-title">Gio's <span class="accent">Wacky</span><br>Prodjects</h1>
+  <p class="hero-sub">a chaotic little corner of the internet for tech, code &amp; tinkering</p>
+
+  <div class="scroll-cue">
+    <span>keep scrollin'</span>
+    <span>↓</span>
+  </div>
+</header>
+
+<section id="about">
+  <span class="section-label">who's this guy?</span>
+  <div class="about-card">
+    <div class="avatar">G</div>
+    <p class="about-text">
+      <strong>Hi! I'm Gio!</strong> I'm a programmer who's been messing around with tech since I was 4 years old.
+      Since then I've picked up all kinds of stuff &mdash; old VHS gear, HTML, CSS, batch scripting, Python &mdash;
+      basically anything I could get my hands on, and I'm still learning more every day.
+    </p>
+  </div>
+
+  <div class="chip-row">
+    <span class="chip">HTML</span>
+    <span class="chip">CSS</span>
+    <span class="chip">Batch / .bat</span>
+    <span class="chip">Python</span>
+    <span class="chip">VHS &amp; retro AV</span>
+    <span class="chip">console modding</span>
+    <span class="chip">broadcast tooling</span>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><span class="num">4</span><span class="label">years old when it all started</span></div>
+    <div class="stat"><span class="num">2</span><span class="label">wacky prodjects and counting</span></div>
+    <div class="stat"><span class="num">∞</span><span class="label">random ideas at 2am</span></div>
+  </div>
+</section>
+
+<section id="hobbies">
+  <span class="section-label">obsessed with</span>
+  <div class="sticky-grid">
+    <div class="sticky c1"><span class="emoji">🕹️</span>Modding old Nintendo consoles &mdash; 3DS, Wii, DS, you name it.</div>
+    <div class="sticky c2"><span class="emoji">🍄</span>Always down for some Mario, old or new.</div>
+    <div class="sticky c3"><span class="emoji">📼</span>Collecting &amp; tinkering with VHS gear and other retro tech.</div>
+    <div class="sticky c4"><span class="emoji">🧽</span>Certified SpongeBob enjoyer.</div>
+    <div class="sticky c5"><span class="emoji">🎨</span>Messing around with graphic design for fun.</div>
+    <div class="sticky c6"><span class="emoji">📺</span>Building out broadcast &amp; TV tooling for GioNews TV.</div>
+  </div>
+</section>
+
+<section id="projects">
+  <span class="section-label">the prodjects</span>
+
+  <svg class="doodle" style="top:-10px; right:2%;" width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="#221A15" stroke-width="2.5">
+    <circle cx="30" cy="30" r="20" fill="#FFCC29"/>
+    <path d="M22 32 q8 8 16 0" stroke-linecap="round"/>
+    <circle cx="23" cy="24" r="2.5" fill="#221A15" stroke="none"/>
+    <circle cx="37" cy="24" r="2.5" fill="#221A15" stroke="none"/>
+  </svg>
+
+  <div class="project">
+    <span class="project-tag">project 01</span>
+    <div class="project-body">
+      <div class="project-copy">
+        <h3>GioTV</h3>
+        <p>A streaming service where anyone can go live and share their passion &mdash; be your own TV streamer,
+          no gatekeepers required.</p>
+        <a class="visit-btn" href="https://giotv-50o.pages.dev" target="_blank" rel="noopener">watch now →</a>
+      </div>
+      <div class="polaroid">
+        <div class="pin"></div>
+        <img src="gtv.png" alt="GioTV screenshot">
+        <span class="cap">gio tv!</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="project">
+    <span class="project-tag two">project 02</span>
+    <div class="project-body">
+      <div class="project-copy">
+        <h3>GioTux</h3>
+        <p>My own personal spin on Linux &mdash; built to make it feel friendlier and way more like <em>my</em> OS,
+          without losing the power underneath.</p>
+        <a class="visit-btn blue" href="https://giotux.pages.dev" target="_blank" rel="noopener">try it out →</a>
+      </div>
+      <div class="polaroid">
+        <div class="pin"></div>
+        <img src="tux.png" alt="GioTux screenshot">
+        <span class="cap">gio tux</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="project mystery">
+    <span class="project-tag" style="background:var(--purple); color:#fff;">project 03</span>
+    <span class="qmark">???</span>
+    <h3>top secret</h3>
+    <p style="max-width:100%;">Something wacky is brewing in the workshop. Check back soon for the next prodject.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="strip">made with wacky energy ✂️ &nbsp;•&nbsp; more prodjects comin' soon</div>
+  <p style="margin-top:22px; font-family:'Baloo 2', sans-serif; font-size:0.9rem; color:#5a4f47;">
+    thanks for stopping by the workshop &mdash; go build something wacky too.
+  </p>
+</footer>
+
+</body>
+</html>
